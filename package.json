@@ -1,0 +1,21 @@
+{
+  "name": "homomorphic",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 3333",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "vite-plugin-windicss": "^1.4.12",
+    "vue": "^3.2.16",
+    "windicss": "^3.1.9"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.3",
+    "typescript": "^4.4.3",
+    "unplugin-vue-components": "^0.16.0",
+    "vite": "^2.6.4",
+    "vue-tsc": "^0.3.0"
+  }
+}
