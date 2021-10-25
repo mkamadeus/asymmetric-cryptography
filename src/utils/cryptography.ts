@@ -50,3 +50,5 @@ export const rsaDecrypt = (cipher: bigint, key: RSAKey): bigint => {
   const plain = pow(cipher, priv.d) % priv.n;
   return plain;
 };
+
+// ELGAMAL
