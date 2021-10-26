@@ -1,0 +1,37 @@
+.btn {
+  @apply text-white p-2 transition duration-150 transform;
+  animation: btn-animation var(--animation-btn, 0.25s) ease-out;
+
+  &:focus {
+    @apply outline-none;
+  }
+  &:active:hover,
+  &:active:focus {
+    animation: none;
+    transform: scale(var(--btn-focus-scale, 0.95));
+  }
+  &-primary-1 {
+    @apply bg-purple-500;
+    &:hover {
+      @apply bg-purple-600;
+    }
+  }
+  &-primary-2 {
+    @apply bg-green-500;
+    &:hover {
+      @apply bg-green-600;
+    }
+  }
+}
+
+@keyframes btn-animation {
+  0% {
+    transform: scale(var(--btn-focus-scale, 0.95));
+  }
+  40% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

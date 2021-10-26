@@ -1,4 +1,4 @@
-import { pow, isPrime, randbigint } from "~/utils/math";
+import { pow, isPrime } from "~/utils/math";
 
 type ElGamalPublicKey = { y: bigint; g: bigint; p: bigint };
 type ElGamalPrivateKey = { x: bigint; p: bigint };

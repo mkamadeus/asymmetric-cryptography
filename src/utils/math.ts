@@ -36,3 +36,7 @@ export const randbigint = (limit: bigint): bigint => {
     Math.floor(Math.random() * parseInt(limit.toString()))
   ).valueOf();
 };
+
+export const cast = (x: number): bigint => {
+  return BigInt(x).valueOf();
+};
