@@ -7,12 +7,14 @@ export type ElGamalKey = {
   priv: ElGamalPrivateKey;
 };
 
-export const elGamalGenerateKey = (p: bigint): ElGamalKey => {
+export const elGamalGenerateKey = (
+  p: bigint,
+  g: bigint,
+  x: bigint
+): ElGamalKey => {
   if (!isPrime(p)) throw Error("p not prime");
-
-  // random g, x
-  const g = randbigint(p);
-  const x = randbigint(p - 1n);
+  if (g >= p) throw Error("g should be less than p");
+  if (x >= p - 1n) throw Error("x should be less than p-1");
 
   const y = pow(g, x) % p;
 
@@ -31,11 +33,9 @@ export const elGamalGenerateKey = (p: bigint): ElGamalKey => {
 
 export const elGamalEncrypt = (
   plain: bigint,
-  key: ElGamalPublicKey
+  key: ElGamalPublicKey,
+  k: bigint
 ): [bigint, bigint] => {
-  // random k
-  const k = randbigint(key.p);
-
   const a = pow(key.g, k) % key.p;
   const b = (pow(key.y, k) * plain) % key.p;
   return [a, b];

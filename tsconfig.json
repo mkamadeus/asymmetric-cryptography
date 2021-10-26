@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "ESNext",
+    "module": "commonjs",
     "target": "esnext",
     "lib": ["DOM", "ESNext"],
     "strict": true,
@@ -13,7 +13,7 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "mocha"],
     "paths": {
       "~/*": ["src/*"]
     }
