@@ -30,3 +30,9 @@ export const pow = (n: bigint, p: bigint): bigint => {
   const half = pow(n, p / 2n);
   return half * half;
 };
+
+export const randbigint = (limit: bigint): bigint => {
+  return BigInt(
+    Math.floor(Math.random() * parseInt(limit.toString()))
+  ).valueOf();
+};

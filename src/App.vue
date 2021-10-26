@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { rsaGenerateKey, rsaEncrypt } from "./utils/cryptography";
+import cryptography from "~/utils/cryptography";
 
 const result = ref(0n);
 const plain = ref("");
-const key = computed(() => rsaGenerateKey(3n, 11n, 7n));
+const key = computed(() => cryptography.rsa.keygen(3n, 11n, 7n));
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const key = computed(() => rsaGenerateKey(3n, 11n, 7n));
         class="w-full text-center bg-blue-500 text-white p-2"
         @click="
           () => {
-            result = rsaEncrypt(BigInt(plain).valueOf(), key);
+            result = cryptography.rsa.encrypt(BigInt(plain).valueOf(), key.pub);
           }
         "
       >

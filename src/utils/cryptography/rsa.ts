@@ -1,16 +1,10 @@
-import { isCoprime, pow } from "./math";
+import { isCoprime, pow } from "~/utils/math";
 
-// RSA
-
+type RSAPublicKey = { n: bigint; e: bigint };
+type RSAPrivateKey = { n: bigint; d: bigint };
 export type RSAKey = {
-  pub: {
-    n: bigint;
-    e: bigint;
-  };
-  priv: {
-    n: bigint;
-    d: bigint;
-  };
+  pub: RSAPublicKey;
+  priv: RSAPrivateKey;
 };
 
 export const rsaGenerateKey = (x: bigint, y: bigint, e: bigint): RSAKey => {
@@ -39,16 +33,12 @@ export const rsaGenerateKey = (x: bigint, y: bigint, e: bigint): RSAKey => {
   };
 };
 
-export const rsaEncrypt = (plain: bigint, key: RSAKey): bigint => {
-  const { pub } = key;
-  const cipher = pow(plain, pub.e) % pub.n;
+export const rsaEncrypt = (plain: bigint, key: RSAPublicKey): bigint => {
+  const cipher = pow(plain, key.e) % key.n;
   return cipher;
 };
 
-export const rsaDecrypt = (cipher: bigint, key: RSAKey): bigint => {
-  const { priv } = key;
-  const plain = pow(cipher, priv.d) % priv.n;
+export const rsaDecrypt = (cipher: bigint, key: RSAPrivateKey): bigint => {
+  const plain = pow(cipher, key.d) % key.n;
   return plain;
 };
-
-// ELGAMAL
