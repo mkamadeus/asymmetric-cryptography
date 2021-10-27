@@ -1,4 +1,9 @@
 import { elGamalDecrypt, elGamalEncrypt, elGamalGenerateKey } from "./elgamal";
+import {
+  paillierDecrypt,
+  paillierEncrypt,
+  paillierGenerateKey,
+} from "./paillier";
 import { rsaDecrypt, rsaEncrypt, rsaGenerateKey } from "./rsa";
 
 export default {
@@ -11,5 +16,10 @@ export default {
     keygen: elGamalGenerateKey,
     encrypt: elGamalEncrypt,
     decrypt: elGamalDecrypt,
+  },
+  paillier: {
+    keygen: paillierGenerateKey,
+    encrypt: paillierEncrypt,
+    decrypt: paillierDecrypt,
   },
 };

@@ -42,3 +42,12 @@ export const rsaDecrypt = (cipher: bigint, key: RSAPrivateKey): bigint => {
   const plain = pow(cipher, key.d) % key.n;
   return plain;
 };
+
+// TODO: encrypt string
+// export const rsaStringEncrypt = (plain: string, key: RSAPublicKey): string => {
+//   const ascii = [...plain]
+//     .map((c) => c.charCodeAt(0))
+//     .map(cast)
+//     .map((c) => rsaEncrypt(c, key));
+
+// };
