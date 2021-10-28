@@ -40,3 +40,42 @@ export const randbigint = (limit: bigint): bigint => {
 export const cast = (x: number): bigint => {
   return BigInt(x).valueOf();
 };
+
+export const biggestSmallerPow256 = (n: bigint): bigint => {
+  if (n <= 256) return 0n;
+
+  let pow256 = 256n;
+  let i = 256n;
+  while (true) {
+    i = i << 8n;
+
+    if (i >= n) break;
+    
+    pow256 = i;
+  }
+
+  return pow256;
+}
+
+export const bigintToBytes = (n: bigint): Uint8Array => {
+  // Convert to hex, make it easier to calc byte count
+  let hex = n.toString(16);
+  if (hex.length % 2 !== 0) hex = '0' + hex;
+  return Uint8Array.from(hex.match(/[\da-fA-F]{2}/g)!.map((h) => {
+    return parseInt(h, 16);
+  }));
+}
+
+export const bytesToBigint = (arr: Uint8Array): bigint => {
+  let ret = 0n;
+  for (const byte of arr.values()) ret = (ret << 8n) + BigInt(byte);
+  return ret;
+}
+
+export const strToBytes = (str: string): Uint8Array => {
+  return new TextEncoder().encode(str)
+}
+
+export const bytesToStr = (arr: Uint8Array): string => {
+  return new TextDecoder().decode(arr)
+}
