@@ -57,6 +57,22 @@ export const biggestSmallerPow256 = (n: bigint): bigint => {
   return pow256;
 }
 
+export const calcArrayBatchSize = (n: bigint): bigint => {
+  if (n <= 256) return 0n;
+
+  let temp = 256n;
+  let i = 1n;
+  while (true) {
+    temp = temp << 8n;
+
+    if (temp >= n) break;
+    
+    i++;
+  }
+
+  return i;
+}
+
 export const bigintToBytes = (n: bigint): Uint8Array => {
   // Convert to hex, make it easier to calc byte count
   let hex = n.toString(16);

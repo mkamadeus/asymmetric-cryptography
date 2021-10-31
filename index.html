@@ -5,6 +5,16 @@
     <link rel="icon" href="/pisang.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fried Bananas Cryptography</title>
+    <script>
+      window.addEventListener("dragover",function(e){
+        e = e || event;
+        e.preventDefault();
+      },false);
+      window.addEventListener("drop",function(e){
+        e = e || event;
+        e.preventDefault();
+      },false);
+    </script>
   </head>
   <body>
     <div id="app"></div>
