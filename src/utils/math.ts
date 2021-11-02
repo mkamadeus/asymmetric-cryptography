@@ -31,6 +31,19 @@ export const pow = (n: bigint, p: bigint): bigint => {
   return half * half;
 };
 
+// inverse modulo with prime mod value
+export const fermatModInv = (num: bigint, den: bigint): bigint => {
+  if (gcd(num, den) != 1n)
+    return 0n;
+  else
+    return pow(num, den - 2n) % den;
+}
+
+// Modulo for negative numerators
+export const mod = (num: bigint, den: bigint): bigint => {
+  return ((num % den) + den) % den;
+}
+
 export const randbigint = (limit: bigint): bigint => {
   return BigInt(
     Math.floor(Math.random() * parseInt(limit.toString()))

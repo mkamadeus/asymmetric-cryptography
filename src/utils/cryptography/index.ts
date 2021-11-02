@@ -1,3 +1,4 @@
+import { eccDecrypt, eccEncrypt, eccGenerateKey } from "./ecc";
 import { elGamalDecrypt, elGamalEncrypt, elGamalGenerateKey } from "./elgamal";
 import {
   paillierDecrypt,
@@ -21,5 +22,10 @@ export default {
     keygen: paillierGenerateKey,
     encrypt: paillierEncrypt,
     decrypt: paillierDecrypt,
+  },
+  ecc: {
+    keygen: eccGenerateKey,
+    encrypt: eccEncrypt,
+    decrypt: eccDecrypt,
   },
 };
