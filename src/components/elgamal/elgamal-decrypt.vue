@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import cryptography from "~/utils/cryptography";
 import { ElGamalKey } from "~/utils/cryptography/elgamal";
+import { bigintToBytes, bytesToStr, calcArrayBatchSize } from "~/utils/math";
 
 const props = defineProps<{
   keypair: ElGamalKey;
-  cipher: [bigint, bigint];
+  cipher: string;
 }>();
 const emit = defineEmits(["update:keypair", "update:cipher"]);
 
@@ -22,12 +23,29 @@ const loadPrivateKey = (val: string) => {
   });
 };
 
-const result = ref(0n);
+const result = ref("");
 
 // TODO: fix decyrption
 const decrypt = () => {
-  const plain = cryptography.elgamal.decrypt(props.cipher, props.keypair.priv);
-  result.value = plain;
+  // const plain = cryptography.elgamal.decrypt(props.cipher, props.keypair.priv);
+  // result.value = plain;
+
+  let input: [bigint, bigint][] = props.cipher.split(" ").map((i) => {
+    const splitted = i.split(":");
+    const mapped = [BigInt(splitted[0]), BigInt(splitted[1])];
+    return mapped as [bigint, bigint];
+  });
+  let arraySize = calcArrayBatchSize(props.keypair.priv.p);
+  let bytes = new Uint8Array(Number(arraySize) * input.length);
+
+  let i = 0;
+  for (const bigintPair of input) {
+    let res = cryptography.elgamal.decrypt(bigintPair, props.keypair.priv);
+    bytes.set(bigintToBytes(res), i);
+    i += Number(arraySize);
+  }
+
+  result.value = bytesToStr(bytes);
 };
 </script>
 
@@ -58,6 +76,13 @@ const decrypt = () => {
           @click="loadPrivateKey"
           >Load Private Key</file-load-button
         >
+      </div>
+
+      <div class="flex flex-col w-full">
+        <!-- <text-input id="cipher" v-model="cipher" label="Ciphertext" /> -->
+        <!-- <big-int-input id="cipher" v-model="cipher" /> -->
+        <label for="cipher">Ciphertext</label>
+        <elgamal-cipher-input id="cipher" v-model="cipher" label="Ciphertext" />
       </div>
 
       <div class="flex flex-col space-y-2 w-full">

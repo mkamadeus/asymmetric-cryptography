@@ -24,6 +24,9 @@ export const isCoprime = (x: bigint, y: bigint): boolean => {
 
 // fast expo for bigint
 export const pow = (n: bigint, p: bigint): bigint => {
+  if (p < 0n) throw Error("yo pow can't be negative >:(");
+
+  if (p == 0n) return 1n;
   if (p == 1n) return n;
   if (p % 2n == 1n) return pow(n, p - 1n) * n;
 
@@ -33,16 +36,14 @@ export const pow = (n: bigint, p: bigint): bigint => {
 
 // inverse modulo with prime mod value
 export const fermatModInv = (num: bigint, den: bigint): bigint => {
-  if (gcd(num, den) != 1n)
-    return 0n;
-  else
-    return pow(num, den - 2n) % den;
-}
+  if (gcd(num, den) != 1n) return 0n;
+  else return pow(num, den - 2n) % den;
+};
 
 // Modulo for negative numerators
 export const mod = (num: bigint, den: bigint): bigint => {
   return ((num % den) + den) % den;
-}
+};
 
 export const randbigint = (limit: bigint): bigint => {
   return BigInt(
@@ -63,12 +64,12 @@ export const biggestSmallerPow256 = (n: bigint): bigint => {
     i = i << 8n;
 
     if (i >= n) break;
-    
+
     pow256 = i;
   }
 
   return pow256;
-}
+};
 
 export const calcArrayBatchSize = (n: bigint): bigint => {
   if (n <= 256) return 0n;
@@ -79,32 +80,34 @@ export const calcArrayBatchSize = (n: bigint): bigint => {
     temp = temp << 8n;
 
     if (temp >= n) break;
-    
+
     i++;
   }
 
   return i;
-}
+};
 
 export const bigintToBytes = (n: bigint): Uint8Array => {
   // Convert to hex, make it easier to calc byte count
   let hex = n.toString(16);
-  if (hex.length % 2 !== 0) hex = '0' + hex;
-  return Uint8Array.from(hex.match(/[\da-fA-F]{2}/g)!.map((h) => {
-    return parseInt(h, 16);
-  }));
-}
+  if (hex.length % 2 !== 0) hex = "0" + hex;
+  return Uint8Array.from(
+    hex.match(/[\da-fA-F]{2}/g)!.map((h) => {
+      return parseInt(h, 16);
+    })
+  );
+};
 
 export const bytesToBigint = (arr: Uint8Array): bigint => {
   let ret = 0n;
   for (const byte of arr.values()) ret = (ret << 8n) + BigInt(byte);
   return ret;
-}
+};
 
 export const strToBytes = (str: string): Uint8Array => {
-  return new TextEncoder().encode(str)
-}
+  return new TextEncoder().encode(str);
+};
 
 export const bytesToStr = (arr: Uint8Array): string => {
-  return new TextDecoder().decode(arr)
-}
+  return new TextDecoder().decode(arr);
+};

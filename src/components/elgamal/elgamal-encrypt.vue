@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import cryptography from "~/utils/cryptography";
 import { ElGamalKey } from "~/utils/cryptography/elgamal";
+import { bytesToBigint, calcArrayBatchSize, strToBytes } from "~/utils/math";
 // import { bytesToBigint, calcArrayBatchSize, strToBytes } from "~/utils/math";
 
 const props = defineProps<{
   keypair: ElGamalKey;
-  plain: bigint;
+  plain: string;
 }>();
 
 const emit = defineEmits(["update:keypair", "update:plain"]);
@@ -30,37 +31,24 @@ const loadPublicKey = (val: string) => {
 
 const result = ref("");
 const encrypt = () => {
-  const cipher = cryptography.elgamal.encrypt(
-    props.plain,
-    props.keypair.pub,
-    k.value
-  );
-  console.log(cipher);
+  // const cipher = cryptography.elgamal.encrypt(
+  //   props.plain,
+  //   props.keypair.pub,
+  //   k.value
+  // );
+  // console.log(cipher);
 
   // TODO: fix encryption
-  // let arraySize = calcArrayBatchSize(n.value);
-  // let bytes = strToBytes(props.plain);
-  // console.log(`bytes: ${bytes}`);
-  // if (arraySize == 0n) {
-  //   // Attempt to encrypt as is
-  //   let text = bytesToBigint(bytes);
-  //   result.value = cryptography.elgamal
-  //     .encrypt(text, props.keypair.pub, k.value)
-  //     .toString();
-  // } else {
-  //   let resList: bigint[] = [];
-  //   for (let i = 0; i < bytes.length; i += Number(arraySize)) {
-  //     let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
-  //     let res = cryptography.elgamal.encrypt(
-  //       bigint,
-  //       props.keypair.pub,
-  //       k.value
-  //     );
-  //     resList.push(res);
-  //   }
-  //   result.value = resList.join(" ");
-  // }
-  // result.value = cipher.toString();
+  let arraySize = calcArrayBatchSize(props.keypair.pub.p);
+  let bytes = strToBytes(props.plain);
+  console.log(`bytes: ${bytes}`);
+  let resList: string[] = [];
+  for (let i = 0; i < bytes.length; i += Number(arraySize)) {
+    let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
+    let res = cryptography.elgamal.encrypt(bigint, props.keypair.pub, k.value);
+    resList.push(`${res[0]}:${res[1]}`);
+  }
+  result.value = resList.toString().replace(/,/g, " ");
 };
 </script>
 
@@ -102,8 +90,7 @@ const encrypt = () => {
         <big-int-input id="k" v-model="k" />
       </div>
       <div class="flex flex-col w-full">
-        <label for="plain">plain</label>
-        <big-int-input id="plain" v-model="plain" />
+        <text-input id="plaintext" v-model="plain" label="Plaintext" />
       </div>
 
       <div class="flex flex-col space-y-2 w-full">

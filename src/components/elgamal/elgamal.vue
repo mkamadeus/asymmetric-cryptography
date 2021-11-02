@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const plain = ref(0n);
-const cipher = ref<[bigint, bigint]>([0n, 0n]);
+const plain = ref("");
+const cipher = ref("");
 const state = reactive({
   key: {
     pub: {
