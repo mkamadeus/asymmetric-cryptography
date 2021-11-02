@@ -11,8 +11,12 @@ declare module 'vue' {
     ElgamalKeygen: typeof import('./src/components/elgamal/elgamal-keygen.vue')['default']
     FileLoadButton: typeof import('./src/components/common/file-load-button.vue')['default']
     FileSaveButton: typeof import('./src/components/common/file-save-button.vue')['default']
-    Rsa: typeof import('./src/components/rsa.vue')['default']
-    RsaCipherInput: typeof import('./src/components/rsa-cipher-input.vue')['default']
+    Rsa: typeof import('./src/components/rsa/rsa.vue')['default']
+    RsaCipherInput: typeof import('./src/components/rsa/rsa-cipher-input.vue')['default']
+    RsaDecrypt: typeof import('./src/components/rsa/rsa-decrypt.vue')['default']
+    RsaEncrypt: typeof import('./src/components/rsa/rsa-encrypt.vue')['default']
+    RsaKeygen: typeof import('./src/components/rsa/rsa-keygen.vue')['default']
+    RsaOld: typeof import('./src/components/rsa-old.vue')['default']
     TextInput: typeof import('./src/components/common/text-input.vue')['default']
   }
 }
