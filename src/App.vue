@@ -2,6 +2,9 @@
 
 <template>
   <main class="container mx-auto p-6 min-h-screen">
-    <rsa />
+    <!-- <h1 class="text-5xl font-bold">RSA</h1>
+    <rsa /> -->
+    <h1 class="text-5xl font-bold">ElGamal</h1>
+    <elgamal />
   </main>
 </template>

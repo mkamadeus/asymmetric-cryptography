@@ -1,11 +1,11 @@
 <template>
   <input
-    pattern="[0-9 ]*"
+    inputmode="numeric"
+    pattern="[0-9]*"
     type="text"
     :id="id"
     :value="modelValue?.toString()"
-    placeholder="Enter a string or drag-and-drop a file"
-    @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+    @input="$emit('update:modelValue', BigInt(($event.target as HTMLInputElement).value).valueOf())"
     @dragenter="$event.preventDefault()"
     @dragover="$event.preventDefault()"
     @drop="insertValue($event)"
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  modelValue: string;
+  modelValue: bigint;
   id: string;
 }>();
 const emit = defineEmits(["update:modelValue"]);
@@ -26,7 +26,10 @@ const insertValue = (event: DragEvent) => {
     let reader = new FileReader();
 
     reader.onload = (event) => {
-      emit("update:modelValue", event.target?.result);
+      emit(
+        "update:modelValue",
+        BigInt(event.target?.result as string).valueOf()
+      );
     };
 
     reader.readAsText(file);

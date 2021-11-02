@@ -15,7 +15,9 @@ export default defineConfig({
   plugins: [
     vue(),
     windicss(),
-    components(),
+    components({
+      dts: true,
+    }),
     autoimport({
       imports: "vue",
       include: [/\.vue$/, /\.vue\?vue/],
