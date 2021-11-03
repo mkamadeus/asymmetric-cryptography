@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import Paillier from "./components/paillier/paillier.vue";
+
+window.addEventListener("error", (e) => {
+  alert(e.message);
+});
 </script>
 
 <template>
