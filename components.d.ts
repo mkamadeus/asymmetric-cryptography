@@ -5,6 +5,11 @@
 declare module 'vue' {
   export interface GlobalComponents {
     BigIntInput: typeof import('./src/components/common/big-int-input.vue')['default']
+    Ecc: typeof import('./src/components/ecc/ecc.vue')['default']
+    EccCipherInput: typeof import('./src/components/ecc/ecc-cipher-input.vue')['default']
+    EccDecrypt: typeof import('./src/components/ecc/ecc-decrypt.vue')['default']
+    EccEncrypt: typeof import('./src/components/ecc/ecc-encrypt.vue')['default']
+    EccKeygen: typeof import('./src/components/ecc/ecc-keygen.vue')['default']
     Elgamal: typeof import('./src/components/elgamal/elgamal.vue')['default']
     ElgamalCipherInput: typeof import('./src/components/elgamal/elgamal-cipher-input.vue')['default']
     ElgamalDecrypt: typeof import('./src/components/elgamal/elgamal-decrypt.vue')['default']
