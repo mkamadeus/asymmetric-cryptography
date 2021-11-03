@@ -4,13 +4,12 @@ const cipher = ref("");
 const state = reactive({
   key: {
     pub: {
-      p: 0n,
-      g: 0n,
-      y: 0n,
+      n: 0n,
+      e: 0n,
     },
     priv: {
-      x: 0n,
-      p: 0n,
+      n: 0n,
+      d: 0n,
     },
   },
 });
@@ -25,7 +24,7 @@ const state = reactive({
       }
     "
   >
-    <elgamal-keygen v-model:keypair="state.key" />
+    <rsa-keygen v-model:keypair="state.key" />
     <div
       class="
         flex flex-col
@@ -35,8 +34,8 @@ const state = reactive({
         w-full
       "
     >
-      <elgamal-encrypt v-model:keypair="state.key" v-model:plain="plain" />
-      <elgamal-decrypt v-model:keypair="state.key" v-model:cipher="cipher" />
+      <rsa-encrypt v-model:keypair="state.key" v-model:plain="plain" />
+      <rsa-decrypt v-model:keypair="state.key" v-model:cipher="cipher" />
     </div>
   </form>
 </template>

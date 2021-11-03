@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import cryptography from "~/utils/cryptography";
-import { ElGamalKey } from "~/utils/cryptography/elgamal";
+import { RSAKey } from "~/utils/cryptography/rsa";
 import { bigintToBytes, bytesToStr, calcArrayBatchSize } from "~/utils/math";
 
 const props = defineProps<{
-  keypair: ElGamalKey;
+  keypair: RSAKey;
   cipher: string;
 }>();
 const emit = defineEmits(["update:keypair", "update:cipher"]);
 
 const privateKey = computed(
-  () => `${props.keypair.priv.p} ${props.keypair.priv.x}`
+  () => `${props.keypair.priv.n} ${props.keypair.priv.d}`
 );
 const loadPrivateKey = (val: string) => {
   const loadedKey = val.split(" ");
-  const p = BigInt(loadedKey[0]);
-  const x = BigInt(loadedKey[1]);
+  const n = BigInt(loadedKey[0]);
+  const d = BigInt(loadedKey[1]);
 
   emit("update:keypair", {
     pub: props.keypair.pub,
-    priv: { p, x },
+    priv: { n, d },
   });
 };
 
@@ -27,20 +27,17 @@ const result = ref("");
 
 // TODO: fix decyrption
 const decrypt = () => {
-  // const plain = cryptography.elgamal.decrypt(props.cipher, props.keypair.priv);
+  // const plain = cryptography.rsa.decrypt(props.cipher, props.keypair.priv);
   // result.value = plain;
 
-  let input: [bigint, bigint][] = props.cipher.split(" ").map((i) => {
-    const splitted = i.split(":");
-    const mapped = [BigInt(splitted[0]), BigInt(splitted[1])];
-    return mapped as [bigint, bigint];
-  });
-  let arraySize = calcArrayBatchSize(props.keypair.priv.p);
+  let input = props.cipher.split(" ");
+  let arraySize = calcArrayBatchSize(props.keypair.priv.n);
   let bytes = new Uint8Array(Number(arraySize) * input.length);
 
   let i = 0;
-  for (const bigintPair of input) {
-    let res = cryptography.elgamal.decrypt(bigintPair, props.keypair.priv);
+  for (const bigintStr of input) {
+    let bigint = BigInt(bigintStr);
+    let res = cryptography.rsa.decrypt(bigint, props.keypair.priv);
     bytes.set(bigintToBytes(res), i);
     i += Number(arraySize);
   }
@@ -50,17 +47,17 @@ const decrypt = () => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-1/2">
     <h2 class="text-xl font-semibold">Decrypt</h2>
     <div class="flex flex-col w-full space-y-2">
       <div class="flex w-full space-x-2">
         <div class="flex flex-col w-full">
           <label for="p">p</label>
-          <BigIntInput id="p" v-model="keypair.priv.p" />
+          <big-int-input id="n" v-model="keypair.priv.n" />
         </div>
         <div class="flex flex-col w-full">
-          <label for="x">x</label>
-          <BigIntInput id="x" v-model="keypair.priv.x" />
+          <label for="d">d</label>
+          <big-int-input id="d" v-model="keypair.priv.d" />
         </div>
       </div>
 
@@ -82,7 +79,7 @@ const decrypt = () => {
         <!-- <text-input id="cipher" v-model="cipher" label="Ciphertext" /> -->
         <!-- <big-int-input id="cipher" v-model="cipher" /> -->
         <label for="cipher">Ciphertext</label>
-        <elgamal-cipher-input id="cipher" v-model="cipher" label="Ciphertext" />
+        <rsa-cipher-input id="cipher" v-model="cipher" label="Ciphertext" />
       </div>
 
       <div class="flex flex-col space-y-2 w-full">
@@ -90,9 +87,9 @@ const decrypt = () => {
           Decrypt
         </button>
       </div>
-      <div class="text-center font-bold text-5xl">
-        {{ result }}
-      </div>
+    </div>
+    <div class="">
+      {{ result }}
     </div>
   </div>
 </template>
