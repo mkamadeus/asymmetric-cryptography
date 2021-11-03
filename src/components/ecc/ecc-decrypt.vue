@@ -141,9 +141,9 @@ const decode = (c: Point): bigint => {
       <div class="flex flex-col space-y-2 w-full">
         <file-load-button
           class="btn btn-primary-1 w-full"
-          @click="$emit('update:cipher', $event.value)"
+          @click="val => $emit('update:cipher', val)"
         >
-          Load Plaintext
+          Load Ciphertext
         </file-load-button>
         <button class="btn btn-primary-2 w-full" @click="decrypt">
           Decrypt

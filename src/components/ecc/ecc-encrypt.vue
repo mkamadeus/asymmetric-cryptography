@@ -162,7 +162,7 @@ const encode = (m: bigint): Point => {
       <div class="flex flex-col space-y-2 w-full">
         <file-load-button
           class="btn btn-primary-1 w-full"
-          @click="$emit('update:plain', $event.value)"
+          @click="val => $emit('update:plain', val)"
         >
           Load Plaintext
         </file-load-button>
