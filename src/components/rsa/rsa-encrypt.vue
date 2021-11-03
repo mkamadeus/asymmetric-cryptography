@@ -60,7 +60,7 @@ const encrypt = () => {
       <div class="flex flex-col space-y-2 w-full">
         <file-save-button
           class="btn btn-primary-1 w-full"
-          filename="rsa.pri"
+          filename="rsa.pub"
           :data="publicKey"
           >Save Public Key</file-save-button
         >

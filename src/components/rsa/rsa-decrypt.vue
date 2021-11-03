@@ -52,7 +52,7 @@ const decrypt = () => {
     <div class="flex flex-col w-full space-y-2">
       <div class="flex w-full space-x-2">
         <div class="flex flex-col w-full">
-          <label for="p">p</label>
+          <label for="n">n</label>
           <big-int-input id="n" v-model="keypair.priv.n" />
         </div>
         <div class="flex flex-col w-full">
@@ -64,7 +64,7 @@ const decrypt = () => {
       <div class="flex flex-col space-y-2 w-full">
         <file-save-button
           class="btn btn-primary-1 w-full"
-          filename="elgamal.pri"
+          filename="rsa.pri"
           :data="privateKey"
           >Save Private Key</file-save-button
         >
