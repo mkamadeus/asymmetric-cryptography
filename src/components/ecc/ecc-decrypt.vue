@@ -91,7 +91,7 @@ const decrypt = () => {
 
       <div class="flex flex-col w-full">
         <label for="plain">Ciphertext</label>
-        <big-int-input id="plain" v-model="cipher" />
+        <ecc-cipher-input id="plain" v-model="cipher" />
       </div>
 
       <div class="flex flex-col space-y-2 w-full">

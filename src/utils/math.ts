@@ -40,10 +40,30 @@ export const fermatModInv = (num: bigint, den: bigint): bigint => {
   else return pow(num, den - 2n) % den;
 };
 
+// Calculate the nth root of val
+// https://stackoverflow.com/questions/53683995/javascript-big-integer-square-root/58863398#58863398
+export const rootNth = (val: bigint, k=2n): bigint => {
+  let o = 0n; // old approx value
+  let x = val;
+  let limit = 100;
+  
+  while(x**k!==k && x!==o && --limit) {
+    o=x;
+    x = ((k-1n)*x + val/pow(x, (k-1n)))/k;
+  }
+  
+  return x;
+}
+
 // Modulo for negative numerators
 export const mod = (num: bigint, den: bigint): bigint => {
   return ((num % den) + den) % den;
 };
+
+// Euler's Criterion - Check if square root under modulo p exists
+export const eulerCrit = (n: bigint, p: bigint): boolean => {
+  return pow(n, (p - 1n) / 2n) % p == 1n
+}
 
 export const randbigint = (limit: bigint): bigint => {
   return BigInt(

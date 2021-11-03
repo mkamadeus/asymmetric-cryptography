@@ -10,5 +10,6 @@
     <elgamal />
     <h1 class="text-5xl font-bold mt-10">ECC</h1>
     <ecc />
+    <div class="mt-80"></div>
   </main>
 </template>

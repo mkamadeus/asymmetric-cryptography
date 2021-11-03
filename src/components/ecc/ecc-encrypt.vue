@@ -127,7 +127,7 @@ const encrypt = () => {
       </div>
 
       <div class="flex flex-col w-full">
-        <label for="plain">Plain</label>
+        <label for="plain">Plaintext</label>
         <big-int-input id="plain" v-model="plain" />
       </div>
 
