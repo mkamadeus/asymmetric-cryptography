@@ -17,8 +17,8 @@ const keygen = () => {
 
 <template>
   <div class="flex flex-col w-full">
-    <h2 class="text-xl font-semibold">Keygen</h2>
-    <div class="flex w-full space-x-2">
+    <h2 class="text-xl font-semibold mt-4">Keygen</h2>
+    <div class="flex w-full space-x-2 mb-2">
       <div class="flex flex-col w-full">
         <label for="p">p</label>
         <BigIntInput id="p" v-model="p" />
