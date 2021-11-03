@@ -1,7 +1,7 @@
 <template>
   <input
     inputmode="numeric"
-    pattern="[0-9]*"
+    pattern="\-[0-9]*"
     type="text"
     :id="id"
     :value="modelValue?.toString()"

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// import cryptography from "~/utils/cryptography";
+import cryptography from "~/utils/cryptography";
 import { ECCKey } from "~/utils/cryptography/ecc";
-// import { bytesToBigint, calcArrayBatchSize, strToBytes } from "~/utils/math";
+import { Point } from "~/utils/ec";
+import { bytesToBigint, eulerCrit, pow, randbigint, rootNth, strToBytes } from "~/utils/math";
 
 const props = defineProps<{
   keypair: ECCKey;
@@ -16,52 +17,80 @@ const publicKey = computed(
     + `${props.keypair.pub.Q.x} ${props.keypair.pub.Q.y} ${props.keypair.pub.k}`)
 );
 
+// TODO: Fix
 const loadPublicKey = (val: string) => {
   const loadedKey = val.split(" ");
-  const p = BigInt(loadedKey[0]);
-  const g = BigInt(loadedKey[1]);
-  const y = BigInt(loadedKey[2]);
+  const a = BigInt(loadedKey[0]);
+  const b = BigInt(loadedKey[1]);
+  const p = BigInt(loadedKey[2]);
+  const Bx = BigInt(loadedKey[3]);
+  const By = BigInt(loadedKey[4]);
+  const Qx = BigInt(loadedKey[5]);
+  const Qy = BigInt(loadedKey[6]);
+  const k = BigInt(loadedKey[7]);
 
   emit("update:keypair", {
-    pub: { p, g, y },
+    pub: { ec: { a, b, p }, B: { x: Bx, y: By }, Q: { x: Qx, y: Qy }, k },
     priv: props.keypair.priv,
   });
 };
 
 const result = ref("");
 const encrypt = () => {
-  // const cipher = cryptography.elgamal.encrypt(
-  //   props.plain,
-  //   props.keypair.pub,
-  //   k.value
-  // );
-  // console.log(cipher);
+  // Encoding
+  let bytes = strToBytes(props.plain);
+  let encodedText: Point[] = [];
 
-  // TODO: fix encryption
-  // let arraySize = calcArrayBatchSize(n.value);
-  // let bytes = strToBytes(props.plain);
-  // console.log(`bytes: ${bytes}`);
-  // if (arraySize == 0n) {
-  //   // Attempt to encrypt as is
-  //   let text = bytesToBigint(bytes);
-  //   result.value = cryptography.elgamal
-  //     .encrypt(text, props.keypair.pub, k.value)
-  //     .toString();
-  // } else {
-  //   let resList: bigint[] = [];
-  //   for (let i = 0; i < bytes.length; i += Number(arraySize)) {
-  //     let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
-  //     let res = cryptography.elgamal.encrypt(
-  //       bigint,
-  //       props.keypair.pub,
-  //       k.value
-  //     );
-  //     resList.push(res);
-  //   }
-  //   result.value = resList.join(" ");
-  // }
-  // result.value = cipher.toString();
+  for (let i = 0; i < bytes.length; i++) {
+    // Encode to number
+    let bigint = bytesToBigint(bytes.slice(i, i + 1));
+
+    // Encode to point
+    let point = encode(bigint);
+    encodedText.push(point)
+  }
+
+  console.log(encodedText)
+
+  // Encryption
+  const k = randbigint(props.keypair.pub.ec.p - 2n) + 1n
+  const encryptedPoints: [Point, Point][] = [];
+  for (const Pm of encodedText) {
+    let Pc = cryptography.ecc.encrypt(Pm, props.keypair.pub, k);
+    encryptedPoints.push(Pc);
+  }
+
+  console.log(encryptedPoints)
+
+  // Stringify
+  let text: string[] = [];
+  for (const Pc of encryptedPoints) {
+    text.push(`${Pc[0].x},${Pc[0].y},${Pc[1].x},${Pc[1].y}`);
+  }
+  result.value = text.join(" ");
 };
+
+const encode = (m: bigint): Point => {
+  let a = props.keypair.pub.ec.a;
+  let b = props.keypair.pub.ec.b;
+  let p = props.keypair.pub.ec.p;
+
+  let x = m * props.keypair.pub.k + 1n;
+  let f = (x: bigint) => pow(x, 3n) + a * x + b;
+
+  // Find x where sqrt of y^2 exists
+  let y = f(x)
+  while (!eulerCrit(y, p)) {
+    x++;
+    y = f(x);
+  }
+
+  return {
+    x: x,
+    y: rootNth(y % p),
+  }
+}
+
 </script>
 
 <template>
@@ -127,8 +156,7 @@ const encrypt = () => {
       </div>
 
       <div class="flex flex-col w-full">
-        <label for="plain">Plaintext</label>
-        <big-int-input id="plain" v-model="plain" />
+        <text-input id="plain" v-model="plain" label="Plaintext" />
       </div>
 
       <div class="flex flex-col space-y-2 w-full">
@@ -142,7 +170,7 @@ const encrypt = () => {
           Encrypt
         </button>
       </div>
-      <div class="text-center font-bold text-5xl">
+      <div class="">
         {{ result }}
       </div>
     </div>

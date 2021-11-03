@@ -1,6 +1,8 @@
 <script setup lang="ts">
-// import cryptography from "~/utils/cryptography";
+import cryptography from "~/utils/cryptography";
 import { ECCKey } from "~/utils/cryptography/ecc";
+import { Point } from "~/utils/ec";
+import { bigintToBytes, bytesToStr } from "~/utils/math";
 
 const props = defineProps<{
   keypair: ECCKey;
@@ -16,22 +18,64 @@ const privateKey = computed(
 
 const loadPrivateKey = (val: string) => {
   const loadedKey = val.split(" ");
-  const p = BigInt(loadedKey[0]);
-  const x = BigInt(loadedKey[1]);
+  const a = BigInt(loadedKey[0]);
+  const b = BigInt(loadedKey[1]);
+  const p = BigInt(loadedKey[2]);
+  const Bx = BigInt(loadedKey[3]);
+  const By = BigInt(loadedKey[4]);
+  const x = BigInt(loadedKey[5]);
+  const k = BigInt(loadedKey[6]);
 
   emit("update:keypair", {
     pub: props.keypair.pub,
-    priv: { p, x },
+    priv: { ec: { a, b, p }, B: { x: Bx, y: By }, x, k },
   });
 };
 
-const result = ref(0n);
+const result = ref("");
 
 // TODO: fix decyrption
 const decrypt = () => {
-  // const plain = cryptography.elgamal.decrypt(props.cipher, props.keypair.priv);
-  // result.value = plain;
+  // Parse Text
+  const text = props.cipher.split(" ");
+  const encryptedPoints: [Point, Point][] = [];
+
+  for (const pointStr of text) {
+    let attrs = pointStr.split(',');
+    let a = { x: BigInt(attrs[0]), y: BigInt(attrs[1]) };
+    let b = { x: BigInt(attrs[2]), y: BigInt(attrs[3]) };
+
+    encryptedPoints.push([a, b])
+  }
+
+  console.log(encryptedPoints)
+
+  // Decryption
+  let encodedText: Point[] = [];
+  for (const Pc of encryptedPoints) {
+    let Pm = cryptography.ecc.decrypt(Pc, props.keypair.priv);
+    encodedText.push(Pm);
+  }
+
+  console.log(encodedText)
+
+  // Decoding
+  let bytes = new Uint8Array(encodedText.length);
+  for (let i = 0; i < encodedText.length; i++) {
+    // Decode to number
+    let bigint = decode(encodedText[i]);
+
+    // Decode to byte
+    let byte = bigintToBytes(bigint);
+    bytes.set(byte, i);
+  }
+
+  result.value = bytesToStr(bytes);
 };
+
+const decode = (c: Point): bigint => {
+  return (c.x - 1n) / props.keypair.priv.k;
+}
 </script>
 
 <template>
@@ -105,7 +149,7 @@ const decrypt = () => {
           Decrypt
         </button>
       </div>
-      <div class="text-center font-bold text-5xl">
+      <div class="">
         {{ result }}
       </div>
     </div>
