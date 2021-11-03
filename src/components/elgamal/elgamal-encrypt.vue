@@ -31,20 +31,21 @@ const loadPublicKey = (val: string) => {
 
 const result = ref("");
 const encrypt = () => {
-  // const cipher = cryptography.elgamal.encrypt(
-  //   props.plain,
-  //   props.keypair.pub,
-  //   k.value
-  // );
-  // console.log(cipher);
 
   // TODO: fix encryption
   let arraySize = calcArrayBatchSize(props.keypair.pub.p);
   let bytes = strToBytes(props.plain);
   console.log(`bytes: ${bytes}`);
   let resList: string[] = [];
-  for (let i = 0; i < bytes.length; i += Number(arraySize)) {
-    let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
+  
+  if (arraySize > 0) {
+    for (let i = 0; i < bytes.length; i += Number(arraySize)) {
+      let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
+      let res = cryptography.elgamal.encrypt(bigint, props.keypair.pub, k.value);
+      resList.push(`${res[0]}:${res[1]}`);
+    }
+  } else {
+    let bigint = bytesToBigint(bytes);
     let res = cryptography.elgamal.encrypt(bigint, props.keypair.pub, k.value);
     resList.push(`${res[0]}:${res[1]}`);
   }

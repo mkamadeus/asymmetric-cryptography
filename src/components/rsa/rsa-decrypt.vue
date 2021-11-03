@@ -32,17 +32,23 @@ const decrypt = () => {
 
   let input = props.cipher.split(" ");
   let arraySize = calcArrayBatchSize(props.keypair.priv.n);
-  let bytes = new Uint8Array(Number(arraySize) * input.length);
 
   let i = 0;
-  for (const bigintStr of input) {
-    let bigint = BigInt(bigintStr);
+  if (arraySize > 0) {
+    let bytes = new Uint8Array(Number(arraySize) * input.length);
+    for (const bigintStr of input) {
+      let bigint = BigInt(bigintStr);
+      let res = cryptography.rsa.decrypt(bigint, props.keypair.priv);
+      bytes.set(bigintToBytes(res), i);
+      i += Number(arraySize);
+    }
+    result.value = bytesToStr(bytes);
+  } else {
+    let bigint = BigInt(input[0]);
     let res = cryptography.rsa.decrypt(bigint, props.keypair.priv);
-    bytes.set(bigintToBytes(res), i);
-    i += Number(arraySize);
+    let bytes = bigintToBytes(res);
+    result.value = bytesToStr(bytes);
   }
-
-  result.value = bytesToStr(bytes);
 };
 </script>
 

@@ -36,16 +36,21 @@ const decrypt = () => {
     return mapped as [bigint, bigint];
   });
   let arraySize = calcArrayBatchSize(props.keypair.priv.p);
-  let bytes = new Uint8Array(Number(arraySize) * input.length);
 
   let i = 0;
-  for (const bigintPair of input) {
-    let res = cryptography.elgamal.decrypt(bigintPair, props.keypair.priv);
-    bytes.set(bigintToBytes(res), i);
-    i += Number(arraySize);
+  if (arraySize > 0) {
+    let bytes = new Uint8Array(Number(arraySize) * input.length);
+    for (const bigintPair of input) {
+      let res = cryptography.elgamal.decrypt(bigintPair, props.keypair.priv);
+      bytes.set(bigintToBytes(res), i);
+      i += Number(arraySize);
+    }
+    result.value = bytesToStr(bytes);
+  } else {
+    let res = cryptography.elgamal.decrypt(input[0], props.keypair.priv);
+    let bytes = bigintToBytes(res);
+    result.value = bytesToStr(bytes);
   }
-
-  result.value = bytesToStr(bytes);
 };
 </script>
 

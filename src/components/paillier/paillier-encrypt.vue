@@ -34,8 +34,14 @@ const encrypt = () => {
   console.log(`bytes: ${bytes}`);
 
   let resList: bigint[] = [];
-  for (let i = 0; i < bytes.length; i += Number(arraySize)) {
-    let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
+  if (arraySize > 0n) {
+    for (let i = 0; i < bytes.length; i += Number(arraySize)) {
+      let bigint = bytesToBigint(bytes.slice(i, i + Number(arraySize)));
+      let res = cryptography.paillier.encrypt(bigint, props.keypair.pub, r.value);
+      resList.push(res);
+    }
+  } else {
+    let bigint = bytesToBigint(bytes);
     let res = cryptography.paillier.encrypt(bigint, props.keypair.pub, r.value);
     resList.push(res);
   }
