@@ -103,7 +103,7 @@ const encrypt = () => {
           Encrypt
         </button>
       </div>
-      <div class="text-center font-bold text-5xl">
+      <div class="">
         {{ result }}
       </div>
     </div>
